@@ -1,7 +1,6 @@
 import {
   Injectable,
   NotFoundException,
-  ConflictException,
 } from '@nestjs/common';
 
 import type {
@@ -11,7 +10,6 @@ import type {
 
 import { PrismaService } from '../../../prisma/prisma.service';
 import { Country } from '../../../generated/client';
-import { MasterStatus } from '../../enum';
 
 @Injectable()
 export class CountryService {
@@ -51,20 +49,24 @@ export class CountryService {
 
     return item;
   }
-async update(id: string, dto: UpdateCountryDto): Promise<Country> {
-  await this.findOne(id);
 
- 
-  const { status, ...restDto } = dto;
+  async update(
+    id: string,
+    dto: UpdateCountryDto,
+  ): Promise<Country> {
+    await this.findOne(id);
 
-  return this.prisma.country.update({
-    where: { id },
-    data: {
-      ...restDto,
-      ...(status && { status: status as MasterStatus }),
-    },
-  });
-}
+    const { status, ...restDto } = dto;
+
+    return this.prisma.country.update({
+      where: { id },
+      data: {
+        ...restDto,
+        ...(status && { status }),
+      },
+    });
+  }
+
   async remove(id: string): Promise<Country> {
     await this.findOne(id);
 

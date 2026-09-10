@@ -11,21 +11,25 @@ import {
 } from '@nestjs/common';
 import { UniversityService } from './university.service';
 import type { CreateUniversityDto, UpdateUniversityDto } from '../../dto';
-import type { UniversityResponse, UniversitiesPaginatedResponse } from '../../response';
+import type { UniversitiesPaginatedResponse, UniversityResponse } from '../../response';
+
 
 @Controller('universities')
 export class UniversityController {
   constructor(private readonly universityService: UniversityService) {}
 
   @Post()
-  async create(@Body() dto: CreateUniversityDto): Promise<UniversityResponse> {
-    const data = await this.universityService.create(dto);
-    return {
-      success: true,
-      message: 'University created successfully',
-      data,
-    };
-  }
+async create(
+  @Body() dto: CreateUniversityDto,
+): Promise<UniversityResponse> {
+  const data = await this.universityService.create(dto);
+
+  return {
+    success: true,
+    message: 'University created successfully',
+    data, // ❌ இங்கே type mismatch
+  };
+}
 
   @Get()
   async findAll(

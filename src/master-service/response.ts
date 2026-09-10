@@ -1,5 +1,23 @@
-import { CertificationProvider, City, College, CollegeDepartment, Country, Currency, Degree, Department, FileType, Industry, Language, Skill, SocialPlatform, State, Timezone, University } from "./types";
+import type {
+  CertificationProvider,
+  City,
+  College,
+  CollegeDepartment,
+  Country,
+  Currency,
+  Degree,
+  Department,
+  FileType,
+  Industry,
+  Language,
+  Skill,
+  SocialPlatform,
+  State,
+  Timezone,
+  University,
+} from './types';
 
+import type { University as PrismaUniversity } from '../generated/client';
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -19,50 +37,98 @@ export interface ApiPaginatedResponse<T> {
   };
 }
 
+// Country
 export type CountryResponse = ApiResponse<Country>;
-export type CountriesPaginatedResponse = ApiPaginatedResponse<Country>;
+export type CountriesPaginatedResponse =
+  ApiPaginatedResponse<Country>;
 
+// State
 export type StateResponse = ApiResponse<State>;
-export type StatesPaginatedResponse = ApiPaginatedResponse<State>;
+export type StatesPaginatedResponse =
+  ApiPaginatedResponse<State>;
 
+// City
 export type CityResponse = ApiResponse<City>;
-export type CitiesPaginatedResponse = ApiPaginatedResponse<City>;
+export type CitiesPaginatedResponse =
+  ApiPaginatedResponse<City>;
 
+// Language
 export type LanguageResponse = ApiResponse<Language>;
-export type LanguagesPaginatedResponse = ApiPaginatedResponse<Language>;
+export type LanguagesPaginatedResponse =
+  ApiPaginatedResponse<Language>;
 
+// Currency
 export type CurrencyResponse = ApiResponse<Currency>;
-export type CurrenciesPaginatedResponse = ApiPaginatedResponse<Currency>;
+export type CurrenciesPaginatedResponse =
+  ApiPaginatedResponse<Currency>;
 
+// Timezone
 export type TimezoneResponse = ApiResponse<Timezone>;
-export type TimezonesPaginatedResponse = ApiPaginatedResponse<Timezone>;
+export type TimezonesPaginatedResponse =
+  ApiPaginatedResponse<Timezone>;
 
+// Skill
 export type SkillResponse = ApiResponse<Skill>;
-export type SkillsPaginatedResponse = ApiPaginatedResponse<Skill>;
+export type SkillsPaginatedResponse =
+  ApiPaginatedResponse<Skill>;
 
+// Industry
 export type IndustryResponse = ApiResponse<Industry>;
-export type IndustriesPaginatedResponse = ApiPaginatedResponse<Industry>;
+export type IndustriesPaginatedResponse =
+  ApiPaginatedResponse<Industry>;
 
+// Degree
 export type DegreeResponse = ApiResponse<Degree>;
-export type DegreesPaginatedResponse = ApiPaginatedResponse<Degree>;
+export type DegreesPaginatedResponse =
+  ApiPaginatedResponse<Degree>;
 
-export type UniversityResponse = ApiResponse<University>;
-export type UniversitiesPaginatedResponse = ApiPaginatedResponse<University>;
+// University
+// Prisma generated type is used here because
+// UniversityService returns Prisma University data.
+export type UniversityResponse =
+  ApiResponse<PrismaUniversity>;
 
-export type CertificationProviderResponse = ApiResponse<CertificationProvider>;
-export type CertificationProvidersPaginatedResponse = ApiPaginatedResponse<CertificationProvider>;
+export type UniversitiesPaginatedResponse =
+  ApiPaginatedResponse<PrismaUniversity>;
 
-export type FileTypeResponse = ApiResponse<FileType>;
-export type FileTypesPaginatedResponse = ApiPaginatedResponse<FileType>;
+// Certification Provider
+export type CertificationProviderResponse =
+  ApiResponse<CertificationProvider>;
 
-export type SocialPlatformResponse = ApiResponse<SocialPlatform>;
-export type SocialPlatformsPaginatedResponse = ApiPaginatedResponse<SocialPlatform>;
+export type CertificationProvidersPaginatedResponse =
+  ApiPaginatedResponse<CertificationProvider>;
 
-export type CollegeResponse = ApiResponse<College>;
-export type CollegesPaginatedResponse = ApiPaginatedResponse<College>;
+// File Type
+export type FileTypeResponse =
+  ApiResponse<FileType>;
 
-export type DepartmentResponse = ApiResponse<Department>;
-export type DepartmentsPaginatedResponse = ApiPaginatedResponse<Department>;
+export type FileTypesPaginatedResponse =
+  ApiPaginatedResponse<FileType>;
 
-export type CollegeDepartmentResponse = ApiResponse<CollegeDepartment>;
-export type CollegeDepartmentsPaginatedResponse = ApiPaginatedResponse<CollegeDepartment>;
+// Social Platform
+export type SocialPlatformResponse =
+  ApiResponse<SocialPlatform>;
+
+export type SocialPlatformsPaginatedResponse =
+  ApiPaginatedResponse<SocialPlatform>;
+
+// College
+export type CollegeResponse =
+  ApiResponse<College>;
+
+export type CollegesPaginatedResponse =
+  ApiPaginatedResponse<College>;
+
+// Department
+export type DepartmentResponse =
+  ApiResponse<Department>;
+
+export type DepartmentsPaginatedResponse =
+  ApiPaginatedResponse<Department>;
+
+// College Department
+export type CollegeDepartmentResponse =
+  ApiResponse<CollegeDepartment>;
+
+export type CollegeDepartmentsPaginatedResponse =
+  ApiPaginatedResponse<CollegeDepartment>;
