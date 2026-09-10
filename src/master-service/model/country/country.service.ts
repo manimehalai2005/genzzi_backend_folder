@@ -1,0 +1,75 @@
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
+
+import type {
+  CreateCountryDto,
+  UpdateCountryDto,
+} from '../../dto';
+
+import { PrismaService } from '../../../prisma/prisma.service';
+import { Country } from '../../../generated/client';
+import { MasterStatus } from '../../enum';
+
+@Injectable()
+export class CountryService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(dto: CreateCountryDto): Promise<Country> {
+    return this.prisma.country.create({
+      data: dto,
+    });
+  }
+
+  async findAll(
+    page = 1,
+    limit = 10,
+  ): Promise<{ data: Country[]; total: number }> {
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+      this.prisma.country.findMany({
+        skip,
+        take: limit,
+      }),
+      this.prisma.country.count(),
+    ]);
+
+    return { data, total };
+  }
+
+  async findOne(id: string): Promise<Country> {
+    const item = await this.prisma.country.findUnique({
+      where: { id },
+    });
+
+    if (!item) {
+      throw new NotFoundException('Country not found');
+    }
+
+    return item;
+  }
+async update(id: string, dto: UpdateCountryDto): Promise<Country> {
+  await this.findOne(id);
+
+ 
+  const { status, ...restDto } = dto;
+
+  return this.prisma.country.update({
+    where: { id },
+    data: {
+      ...restDto,
+      ...(status && { status: status as MasterStatus }),
+    },
+  });
+}
+  async remove(id: string): Promise<Country> {
+    await this.findOne(id);
+
+    return this.prisma.country.delete({
+      where: { id },
+    });
+  }
+}
