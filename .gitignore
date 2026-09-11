@@ -2,3 +2,7 @@ node_modules/
 dist/ 
 README.md 
 gitignore 
+node_modules/
+Readme/
+dist/
+gitignore/
