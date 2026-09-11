@@ -1,8 +1,4 @@
 node_modules/ 
+.next/ 
 dist/ 
-README.md 
-gitignore 
-node_modules/
-Readme/
-dist/
-gitignore/
+*.tsbuildinfo 
