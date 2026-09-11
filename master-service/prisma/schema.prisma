@@ -1,0 +1,218 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum MasterStatus {
+  ACTIVE
+  INACTIVE
+}
+
+// ─── Models ───
+model Country {
+  id           String       @id @default(cuid())
+  iso2         String       @unique
+  iso3         String       @unique
+  name         String
+  phoneCode    String?
+  currencyCode String?
+  emoji        String?
+  status       MasterStatus @default(ACTIVE)
+  states       State[]
+  createdAt    DateTime     @default(now())
+  universities University[]
+  colleges     College[]
+
+  @@map("master_countries")
+}
+
+model State {
+  id        String  @id @default(cuid())
+  countryId String
+  country   Country @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  name String
+  code String?
+  cities City[]
+  createdAt    DateTime     @default(now())
+  universities University[]
+  colleges     College[]
+  @@unique([countryId, name])
+  @@map("master_states")
+}
+
+model City {
+  id String @id @default(cuid())
+  stateId String
+  state   State  @relation(fields: [stateId], references: [id], onDelete: Cascade)
+  name String
+  createdAt    DateTime     @default(now())
+  universities University[]
+  colleges     College[]
+  @@unique([stateId, name])
+  @@map("master_cities")
+}
+
+model Language {
+  id String @id @default(cuid())
+  code String @unique
+  name String
+  nativeName String?
+  status MasterStatus @default(ACTIVE)
+  createdAt DateTime @default(now())
+  @@map("master_languages")
+}
+
+model Currency {
+  id String @id @default(cuid())
+  code String @unique
+  name String
+  symbol String?
+  createdAt DateTime @default(now())
+  @@map("master_currencies")
+}
+
+model Timezone {
+  id String @id @default(cuid())
+  name String @unique
+  utcOffset String
+  createdAt DateTime @default(now())
+  @@map("master_timezones")
+}
+
+model Skill {
+  id String @id @default(cuid())
+  name String @unique
+  category String?
+  status MasterStatus @default(ACTIVE)
+  createdAt DateTime @default(now())
+  @@map("master_skills")
+}
+
+model Industry {
+  id String @id @default(cuid())
+  name String @unique
+  description String?
+  createdAt DateTime @default(now())
+  @@map("master_industries")
+}
+
+model Degree {
+  id String @id @default(cuid())
+  name String @unique
+  level String?
+  createdAt DateTime @default(now())
+  @@map("master_degrees")
+}
+
+model University {
+  id String @id @default(cuid())
+  name String
+  countryId String?
+  country   Country? @relation(fields: [countryId], references: [id])
+  stateId String?
+  state   State?  @relation(fields: [stateId], references: [id])
+  cityId String?
+  city   City?   @relation(fields: [cityId], references: [id])
+  website String?
+  createdAt DateTime @default(now())
+  @@unique([name, countryId])
+  @@map("master_universities")
+}
+
+model CertificationProvider {
+  id String @id @default(cuid())
+  name String @unique
+  website String?
+  createdAt DateTime @default(now())
+  @@map("master_certification_providers")
+}
+
+model FileType {
+  id String @id @default(cuid())
+
+  extension String @unique
+
+  mimeType String @unique
+
+  category String?
+
+  createdAt DateTime @default(now())
+
+  @@map("master_file_types")
+}
+
+model SocialPlatform {
+  id String @id @default(cuid())
+
+  name String @unique
+
+  website String?
+
+  icon String?
+
+  createdAt DateTime @default(now())
+
+  @@map("master_social_platforms")
+}
+
+model College {
+  id String @id @default(cuid())
+
+  code String? @unique
+
+  name String
+
+  shortName String?
+
+  website String?
+
+  countryId String?
+  country   Country? @relation(fields: [countryId], references: [id])
+
+  stateId String?
+  state   State?  @relation(fields: [stateId], references: [id])
+
+  cityId String?
+  city   City?   @relation(fields: [cityId], references: [id])
+
+  departments CollegeDepartment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, cityId])
+  @@map("master_colleges")
+}
+
+model Department {
+  id String @id @default(cuid())
+
+  code String? @unique
+
+  name String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  colleges CollegeDepartment[]
+
+  @@map("master_departments")
+}
+
+model CollegeDepartment {
+  id String @id @default(cuid())
+
+  collegeId String
+  college   College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+
+  @@unique([collegeId, departmentId])
+  @@index([departmentId])
+  @@map("master_college_departments")
+}

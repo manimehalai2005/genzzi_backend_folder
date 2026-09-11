@@ -1,0 +1,73 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import type { CreateCurrencyDto, UpdateCurrencyDto } from '../../dto';
+import type { CurrencyResponse, CurrenciesPaginatedResponse } from '../../response';
+import { Prisma, Currency } from '../../../generated/client';
+import { PrismaService } from '../../../prisma/prisma.service';
+
+@Injectable()
+export class CurrencyService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(dto: CreateCurrencyDto): Promise<CurrencyResponse> {
+    const data: Currency = await this.prisma.currency.create({ 
+      data: dto as Prisma.CurrencyCreateInput 
+    });
+    return {
+      success: true,
+      message: 'Currency created successfully',
+      data,
+    };
+  }
+
+  async findAll(page = 1, limit = 10): Promise<CurrenciesPaginatedResponse> {
+    const skip = (page - 1) * limit;
+    const [data, total]: [Currency[], number] = await Promise.all([
+      this.prisma.currency.findMany({ skip, take: limit }),
+      this.prisma.currency.count(),
+    ]);
+    return {
+      success: true,
+      message: 'Currencies fetched successfully',
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  async findOne(code: string): Promise<CurrencyResponse> {
+    const data = await this.prisma.currency.findUnique({ where: { code } });
+    if (!data) throw new NotFoundException('Currency not found');
+    return {
+      success: true,
+      message: 'Currency fetched successfully',
+      data,
+    };
+  }
+
+  async update(code: string, dto: UpdateCurrencyDto): Promise<CurrencyResponse> {
+    await this.findOne(code);
+    const data: Currency = await this.prisma.currency.update({ 
+      where: { code }, 
+      data: dto as Prisma.CurrencyUpdateInput 
+    });
+    return {
+      success: true,
+      message: 'Currency updated successfully',
+      data,
+    };
+  }
+
+  async remove(code: string): Promise<CurrencyResponse> {
+    await this.findOne(code);
+    const data: Currency = await this.prisma.currency.delete({ where: { code } });
+    return {
+      success: true,
+      message: 'Currency deleted successfully',
+      data,
+    };
+  }
+}
